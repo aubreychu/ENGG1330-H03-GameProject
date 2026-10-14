@@ -93,4 +93,3 @@ def run_puzzle():
                 for char in message:
                         print(char, end='', flush=True)
                         time.sleep(0.05)
-    pass 
