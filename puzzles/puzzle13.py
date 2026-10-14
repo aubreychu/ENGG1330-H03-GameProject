@@ -35,4 +35,3 @@ def run_puzzle():
                     print(char, end='', flush=True)
                     time.sleep(0.05)
 
-run_puzzle()
