@@ -20,7 +20,7 @@ def run_puzzle():
         guess = input("Enter the sequence: ")
         if guess == str(code):
             result = True
-            message= "The valave makes a sudden shutting sound and the leak ends!\nYou may now continue your escape!"
+            message= "The valve makes a sudden shutting sound and the leak ends!\nYou may now continue your escape!"
             for char in message:
                     print(char, end='', flush=True)
                     time.sleep(0.05)
