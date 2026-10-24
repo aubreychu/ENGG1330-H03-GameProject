@@ -4,15 +4,18 @@ import random
 
 def run_puzzle():
     message = "You find yourslef in front of a mysterious locker.\nWhen you approach it you realize it contains life jackets!\nExcited by your discovery you try openeing it only to realize it has remained locked!\nComplete the correct sequence of turns on the dile to access the saftey vest.\nPreform the calculations displayed on screen, if the result is odd turn the knob right otherwise turn it left.\nCareful though, wrong entreis casue the entire sequence to fail at the end forcing you to restart!"
+    #Type writer effect
     for char in message:
         print(char, end='', flush=True)
         time.sleep(0.05)
     result = False
     sequence = []
+    #Repeating game until the user completes it correctly
     while result == False:
         print("")
         answer =  ""
         result = True
+        #Generating 5 additions to be preformed
         for i in range(5):
             sequence = [random.randint(1, 10) for _ in range(5)]
             output = ""
@@ -21,14 +24,17 @@ def run_puzzle():
             sum = 0
             for i in range(len(sequence)):
                 sum += sequence[i]
+            #printing while removing the last + sign
             print(output[:-2])
             answer = input("Enter 'r' for right and 'l' for left: ")
+            #Checking what the correct answer is and if it has been entered
             if sum % 2 == 1:
                 if answer != "r":
                     result = False
             else:
                 if answer != "l":
                     result = False
+        #Checkign if an error was made
         if result == False:
             message = "The sequence wasn't correct!\nTry again!"
             for char in message:
@@ -38,4 +44,3 @@ def run_puzzle():
     for char in message:
         print(char, end='', flush=True)
         time.sleep(0.05)
-run_puzzle()
