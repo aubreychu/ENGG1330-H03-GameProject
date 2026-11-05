@@ -58,8 +58,19 @@ def run_puzzle(screen):
         screen.move(9, 0)
         screen.clrtoeol()
         screen.refresh()
-
-        guess = get_input(screen, 11, 2, "Enter the sequence: ")
+        flag = False
+        while flag = False:
+            guess = get_input(screen, 11, 2, "Enter the sequence: ")
+            flag = True
+            for item in guess:
+                if item in '12345678910':
+                    item = item
+                else: 
+                    flag = False
+            if flag = False:
+                msg = "Please input a valid number sequence"
+                type_text(screen, 13, 2, msg, delay=0.01)
+                time.sleep(1.5)
         if guess == str(code):
             result = True
             msg = (
