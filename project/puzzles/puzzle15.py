@@ -75,12 +75,18 @@ def run_puzzle(screen):
             screen.addstr(12, 2, f"Turn {step + 1} of 5:")
             screen.addstr(13, 2, output[:-2])
             screen.refresh()
-
-            answer = get_input(
-                screen, 15, 2,
-                "Enter 'r' for right and 'l' for left: "
-            ).lower()
-
+            #Input/Input validation
+            flag = False
+            while flag = False:
+                answer = get_input(
+                    screen, 15, 2,
+                    "Enter 'r' for right and 'l' for left: "
+                ).lower()
+                if answer == 'l' or answer == 'r':
+                    flag = True
+                else:
+                    msg = "Invalid input, enter 'l' or 'r'."
+                    type_text(screen, 18, 2, msg, delay=0.01)
             if total_sum % 2 == 1:
                 if answer != "r":
                     result = False
