@@ -61,10 +61,25 @@ def run_puzzle(screen):
             screen.addstr(8 + i, 25, line)
 
         screen.refresh()
-
-        gRow = get_input(screen, 18, 2, "Enter the row: ")
-        gCol = get_input(screen, 19, 2, "Enter the column: ")
-
+        #Input/Input validation
+        flag = False
+        while flag = False:
+            gRow = get_input(screen, 18, 2, "Enter the row: ")
+            if gRow in '12345678910':
+                flag = True
+            else:
+                msg = "Invalid input, enter an integer."
+                type_text(screen, 21, 2, msg, delay=0.01)
+                time.sleep(1.5)
+        flag = False
+        while flag = False:
+            gCol = get_input(screen, 19, 2, "Enter the column: ")
+            if gCol in '12345678910':
+                flag = True
+            else:
+                msg = "Invalid input, enter an integer."
+                type_text(screen, 21, 2, msg, delay=0.01)
+                time.sleep(1.5)
         if gRow == str(row + 1) and gCol == str(col + 1):
             result = True
             msg = (
