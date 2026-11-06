@@ -65,6 +65,7 @@ def run_puzzle(screen):
             screen.clrtoeol()
 
         key = random.randint(1, 5)
+        #Input/Input validation
         flag = False
         while flag = False:
             guess = get_input(screen, 11, 2, "Enter your guess: ")
