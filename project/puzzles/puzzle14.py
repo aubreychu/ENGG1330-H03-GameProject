@@ -62,7 +62,7 @@ def run_puzzle(screen):
         screen.addstr(11, 2, "|   | |   | |   | |   | |   |")
         screen.addstr(12, 2, "|___| |___| |___| |___| |___|")
         screen.refresh()
-
+        #Input/Input validation
         raw_guess = get_input(screen, 14, 2, "Which door leads to your escape: ")
         if not raw_guess.isdigit():
             type_text(screen, 16, 2, "Please enter a door number (1-5)!", delay=0.01)
