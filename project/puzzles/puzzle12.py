@@ -59,6 +59,7 @@ def run_puzzle(screen):
         screen.clrtoeol()
         screen.refresh()
         flag = False
+        #Input/Input validation
         while flag = False:
             guess = get_input(screen, 11, 2, "Enter the sequence: ")
             flag = True
