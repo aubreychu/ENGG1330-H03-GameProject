@@ -16,11 +16,26 @@ def get_input(screen, row, col, prompt, max_len=15):
     curses.curs_set(0)
     return raw.decode("utf-8", errors="ignore").strip()
 
+def type_text(screen, row, col, text, delay=0.02):
+    """Draws text with a typewriter effect within 80x24 bounds."""
+    r = row
+    screen.move(r, col)
+    for char in text:
+        if char == "\n":
+            r += 1
+            if r < 23:
+                screen.move(r, col)
+        else:
+            if r < 23:
+                screen.addstr(char)
+                screen.refresh()
+                time.sleep(delay)
+
 
 def run_puzzle(screen):
     curses.curs_set(0)
-    screen.addstr(4, 2, "=== TREASURE CHEST ===")
-    screen.addstr(5, 2, "Collect 100 gold coins to win! Every chest has treasure. No losing!")
+    type_text(screen, 4, 2, "=== TREASURE CHEST ===")
+    type_text(screen, 5, 2, "Collect 100 gold coins to ! Every chest has treasure. No losing!")
     screen.refresh()
 
     gold = 0
@@ -49,7 +64,7 @@ def run_puzzle(screen):
         rewards = [random.randint(10, 30) for _ in range(3)]
         reward = rewards[int(choice) - 1]
 
-        screen.addstr(15, 2, "Opening chest...")
+        type_text(screen, 15, 2, "Opening chest...")
         screen.refresh()
         time.sleep(0.7)
 
@@ -57,22 +72,23 @@ def run_puzzle(screen):
         if bomb <= 20:
             loss = random.randint(5, 15)
             gold = max(0, gold - loss)
-            screen.addstr(17, 2, "Oh no! The chest was trapped! You lost some gold!")
-            screen.addstr(18, 2, f"-{loss} gold coins!")
+            type_text(screen, 17, 2, "Oh no! The chest was trapped! You lost some gold!")
+            type_text(screen, 18, 2, f"-{loss} gold coins!")
         else:
             if reward >= 25:
-                screen.addstr(17, 2, "JACKPOT! A huge treasure!")
+                type_text(screen, 
+                          17, 2, "JACKPOT! A huge treasure!")
             elif reward >= 15:
-                screen.addstr(17, 2, "Nice! You found shiny gold!")
+                type_text(screen, 17, 2, "Nice! You found shiny gold!")
             else:
-                screen.addstr(17, 2, "You found some gold coins!")
+                type_text(screen, 17, 2, "You found some gold coins!")
 
         gold += reward
-        screen.addstr(19, 2, f"+{reward} gold coins!")
+        type_text(screen, 19, 2, f"+{reward} gold coins!")
         screen.refresh()
         time.sleep(1.2)
 
-    screen.addstr(21, 2, f"CONGRATULATIONS! You collected {gold} gold coins! PUZZLE COMPLETED!")
+    type_text(screen, 21, 2, f"CONGRATULATIONS! You collected {gold} gold coins! PUZZLE COMPLETED!")
     screen.refresh()
     time.sleep(1.5)
     return True

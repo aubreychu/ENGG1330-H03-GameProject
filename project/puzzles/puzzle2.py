@@ -16,14 +16,30 @@ def get_input(screen, row, col, prompt, max_len=15):
     curses.curs_set(0)
     return raw.decode("utf-8", errors="ignore").strip()
 
+def type_text(screen, row, col, text, delay=0.02):
+    """Draws text with a typewriter effect within 80x24 bounds."""
+    r = row
+    screen.move(r, col)
+    for char in text:
+        if char == "\n":
+            r += 1
+            if r < 23:
+                screen.move(r, col)
+        else:
+            if r < 23:
+                screen.addstr(char)
+                screen.refresh()
+                time.sleep(delay)
 
 def run_puzzle(screen):
     curses.curs_set(0)
     money = 100.0
     target = random.randint(300, 600)
 
-    screen.addstr(4, 2, "=== STAKE DICE PUZZLE ===")
-    screen.addstr(5, 2, "Reach the target without going bankrupt! Dice: 0.00-99.99 (Edge: 1%)")
+    type_text(screen, 3, 2, "=== STAKE DICE PUZZLE ===")
+    type_text(screen, 4, 2, "Poseidon is asking you for offerings! Dice: 0.00-99.99 (Edge: 1%)")
+    type_text(screen, 5, 2, f"Your target is to get at least ${target}! You starts with $100.")
+    type_text(screen, 6, 2, "Choose a threshold and bet on UNDER or OVER. Win to multiply your money!")
     screen.refresh()
 
     round_number = 0
@@ -143,13 +159,13 @@ def run_puzzle(screen):
         screen.clrtoeol()
 
     if money >= target:
-        screen.addstr(10, 2, "CONGRATULATIONS! YOU WIN!")
+        screen.addstr(10, 2, "CONGRATULATIONS! You pleased Poseidon with your offerings!")
         screen.addstr(11, 2, f"Final balance: ${money:.2f} (Target: ${target})")
         screen.refresh()
         time.sleep(1.5)
         return True
     else:
-        screen.addstr(10, 2, "GAME OVER! YOU WENT BANKRUPT!")
+        screen.addstr(10, 2, "You lose all your offerings! Poseidon is angry now!")
         screen.refresh()
         time.sleep(1.5)
         return False

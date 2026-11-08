@@ -4,7 +4,6 @@ import time
 
 
 def get_input(screen, row, col, prompt, max_len=15):
-    """Prompts the user for a text string inside curses."""
     screen.move(row, 0)
     screen.clrtoeol()
     screen.addstr(row, col, prompt)
@@ -16,17 +15,33 @@ def get_input(screen, row, col, prompt, max_len=15):
     curses.curs_set(0)
     return raw.decode("utf-8", errors="ignore").strip()
 
+def type_text(screen, row, col, text, delay=0.02):
+    """Draws text with a typewriter effect within 80x24 bounds."""
+    r = row
+    screen.move(r, col)
+    for char in text:
+        if char == "\n":
+            r += 1
+            if r < 23:
+                screen.move(r, col)
+        else:
+            if r < 23:
+                screen.addstr(char)
+                screen.refresh()
+                time.sleep(delay)
+
 
 def run_puzzle(screen):
     curses.curs_set(0)
     target = random.randint(300, 600)
 
     screen.addstr(4, 2, "=== MINES GAMBLING PUZZLE ===")
-    screen.addstr(5, 2, f"Your target is ${target}! Each round starts with $100.")
-    screen.addstr(6, 2, "Find safe tiles to multiply your money. Hit a mine and lose it all!")
+    type_text(screen, 5, 2, "You need money to escape from this place! Or else you couldn't even pay for a cup of coffee!")
+    type_text(screen, 6, 2, f"Your target is to get at least ${target}! Each round starts with $100.")
+    type_text(screen, 7, 2, "Find safe tiles to multiply your money. Hit a mine and lose it all!")
     screen.refresh()
 
-    mine_count = 5
+    mine_count = 3
 
     while True:
         money = 100
@@ -34,14 +49,14 @@ def run_puzzle(screen):
         revealed = set()
 
         while True:
-            # Clear dynamic board area (Rows 8 to 22)
+            # Clear dynamic board area
             for r in range(8, 23):
                 screen.move(r, 0)
                 screen.clrtoeol()
 
             screen.addstr(8, 2, f"--- MINES BOARD | Money: ${money:.2f} | Target: ${target} ---")
 
-            # Draw 5x5 Mines Board on Rows 10 to 14
+            # Draw 5x5 Mines Board
             for row_idx in range(5):
                 line = ""
                 for col_idx in range(1, 6):
@@ -52,7 +67,7 @@ def run_puzzle(screen):
                         line += f"{tile_num:3}"
                 screen.addstr(10 + row_idx, 4, line)
 
-            screen.addstr(16, 2, "Enter 1-25 to reveal a tile, or 0 to cash out.")
+            screen.addstr(16, 2, "Enter 1-25 to reveal a tile.")
             choice = get_input(screen, 18, 2, "Your choice: ")
 
             if not choice.isdigit():
@@ -62,12 +77,6 @@ def run_puzzle(screen):
                 continue
 
             choice = int(choice)
-
-            if choice == 0:
-                screen.addstr(20, 2, f"You cashed out ${money:.2f}!")
-                screen.refresh()
-                time.sleep(1.2)
-                break
 
             if choice < 1 or choice > 25:
                 screen.addstr(20, 2, "Choose a number from 1 to 25.")
@@ -90,7 +99,7 @@ def run_puzzle(screen):
                 screen.refresh()
                 money = 0
                 time.sleep(1.2)
-                break
+                return False
 
             revealed.add(choice)
             money *= 1.25
@@ -99,20 +108,11 @@ def run_puzzle(screen):
             time.sleep(0.8)
 
             if money >= target:
-                screen.addstr(21, 2, f"CONGRATULATIONS! YOU WIN! Final: ${money:.2f} / ${target}")
+                screen.addstr(21, 2, f"CONGRATULATIONS! You earned enough money! Final: ${money:.2f} / ${target}")
                 screen.refresh()
                 time.sleep(1.5)
                 return True
 
-            if len(revealed) == 25 - mine_count:
-                screen.addstr(21, 2, "All safe tiles revealed!")
-                screen.refresh()
-                time.sleep(1.2)
-                break
-
-        again = get_input(screen, 22, 2, "Try another round? (y/n): ").lower()
-        if again != "y":
-            return False
 
 
 if __name__ == "__main__":
