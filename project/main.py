@@ -1,5 +1,6 @@
 import curses
 import random
+import time
 
 from title_screen import run_title_screen
 from puzzles import (
@@ -19,6 +20,8 @@ from puzzles import (
     puzzle14,
     puzzle15,
 )
+
+BASE_ROOM_TIME = 60
 
 CATALOG = [
     {"name": "Mines Board", "run": puzzle1.run_puzzle},
@@ -81,10 +84,11 @@ def play_game(screen):
             break
 
     run = generate_rooms(CATALOG, num_rooms=6)
-
+    carried_over_time = 0.0
+    
     for n, room in enumerate(run, start=1):
         screen.erase()
-
+        allowed_time = BASE_ROOM_TIME + carried_over_time
         # Draw a fixed header at Row 0 to Row 2
         screen.addstr(0, 2, f"=== TITANIC ESCAPE | Room {n} of {len(run)} ===")
         screen.addstr(1, 2, f"Location: {room['name']}")
@@ -92,21 +96,53 @@ def play_game(screen):
         screen.refresh()
 
         # Call the puzzle
+        start_time = time.time()
         passed = room["run"](screen)
+        elapsed = time.time() - start_time
         screen.timeout(-1)
 
+        # Loss Condition 1: Exceeded the room's time limit
+        if elapsed > allowed_time:
+            screen.erase()
+            screen.addstr(9, 20, "========================================")
+            screen.addstr(10, 20, "  TIME EXPIRED! The deck has flooded!   ")
+            screen.addstr(11, 20, "========================================")
+            screen.addstr(13, 20, f"Allowed: {int(allowed_time)}s | Time Taken: {int(elapsed)}s")
+            screen.addstr(14, 20, "The ship sinks and you go down with it...")
+            screen.addstr(17, 20, "Press any key to exit...")
+            screen.refresh()
+            screen.get_wch()
+            return False
+        # Loss Condition 2: Puzzle failure
         if not passed:
             screen.erase()
-            screen.addstr(10, 25, "GAME OVER! The ship has sunk.")
+            screen.addstr(10, 25, "GAME OVER! You failed the puzzle.")
             screen.addstr(12, 25, "Press any key to exit...")
             screen.refresh()
             screen.get_wch()
             return False
+        surplus = allowed_time - elapsed
+        carried_over_time = surplus
+        
+        if n < len(run):
+            screen.erase()
+            screen.addstr(9, 20, "========================================")
+            screen.addstr(10, 20, f"  COMPARTMENT {n} CLEARED! ({int(elapsed)}s spent)  ")
+            screen.addstr(11, 20, "========================================")
+            screen.addstr(13, 20, f"+{int(surplus)}s bonus carried to the next deck!")
+            screen.addstr(15, 20, "Ascending to the next level...")
+            screen.addstr(17, 20, "Press any key to continue...")
+            screen.refresh()
+            screen.get_wch()
 
     # Victory screen
     screen.erase()
-    screen.addstr(10, 20, "*** VICTORY! You reached the Boat Deck! ***")
-    screen.addstr(12, 25, "Press any key to exit...")
+    screen.addstr(9, 18, "********************************************")
+    screen.addstr(10, 18, "  VICTORY! You reached the Boat Deck!       ")
+    screen.addstr(11, 18, "********************************************")
+    screen.addstr(13, 18, f"You successfully launched a lifeboat!")
+    screen.addstr(14, 18, f"Remaining time banked: {int(carried_over_time)} seconds.")
+    screen.addstr(17, 18, "Press any key to exit...")
     screen.refresh()
     screen.get_wch()
     return True
@@ -114,3 +150,4 @@ def play_game(screen):
 
 if __name__ == "__main__":
     curses.wrapper(play_game)
+
