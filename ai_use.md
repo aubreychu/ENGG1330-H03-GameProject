@@ -26,3 +26,26 @@ What we kept, changed or rejected:
 - Changed: Registered all 15 puzzles into the 6-room randomized loop in main.py, Replaced print/input and os.system('cls') with curses addstr/getstr and clrtoeol(), Standardized standalone scripts (puzzle6–10) into run_puzzle(screen) functions returning True/False.
 - Rejected: Standard print() scrolling exceeding 24 rows and text lines over 80 columns that would crash curses.
 - Verification: Compiled all modules via py_compile in the course Docker container, verified run_puzzle(screen) signatures, and ran an AST coordinate audit confirming strict 80x24 compliance.
+
+## Entry
+Member, date: Ryan, 2 Nov 2026
+Tool and model (where available) ChatGPT GPT-6
+Purpose: Making a Mines board that refreshes after every move using the curses module.
+Prompt used: 
+What was kept, changed, or rejected, and how results were checked (tests or corrections)
+- Kept: Whole game concept and system
+- Changed: Uses cursor module so it will update the player's balance without repeatedly printing new boards
+- Rejected: N/A
+- Verification: Reviewed the board-refreshing logic and tested different tile selections, including safe tiles, mines, invalid inputs, and previously revealed tiles, to check that the board and balance updated correctly.
+
+## Entry
+Member, date: Ryan, 8 Nov 2026
+Tool and model (where available) ChatGPT GPT-6
+Purpose: Debugging the logistic mistakes in puzzle2.py
+Prompt used: "Identify and explain the logical mistakes in my Python dice gambling puzzle, particularly the betting calculations, win conditions, balance updates, and input validation."
+Substantial parts affected (files/materials): puzzlep2.py
+What was kept, changed, or rejected, and how results were checked (tests or corrections)
+- Kept: Original game structure, including the betting system, random dice generation, and win/loss conditions.
+- Changed: Incorrect payout calculations, invalid betting inputs.
+- Rejected: N/A
+- Verification: Double-checked the modifying parts and exectuted the program using different betting amounts, thresholds, and dice outcomes.
