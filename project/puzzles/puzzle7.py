@@ -23,7 +23,7 @@ def run_puzzle(screen):
     # Game rules (Rows 4 to 11, all under 75 columns)
     screen.addstr(4, 2, "Welcome to NUMBER BOMB!")
     screen.addstr(5, 2, "A secret bomb number is hidden in a range (0-100).")
-    screen.addstr(6, 2, "Players take turns guessing a number. After each guess:")
+    screen.addstr(6, 2, "Guess the secret number. After each guess:")
     screen.addstr(7, 4, "- Too low  -> everything up to your guess is eliminated")
     screen.addstr(8, 4, "- Too high -> everything from your guess upward is eliminated")
     screen.addstr(9, 2, "Guess the hidden number within 10 tries to win. Good luck!")

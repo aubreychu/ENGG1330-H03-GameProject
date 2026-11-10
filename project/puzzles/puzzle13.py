@@ -20,7 +20,8 @@ def type_text(screen, row, col, text, delay=0.01):
 
 
 def get_input(screen, row, col, prompt):
-    """Prompts the user for a text string inside curses."""
+    screen.move(row, 0)
+    screen.clrtoeol()
     screen.addstr(row, col, prompt)
     screen.refresh()
     curses.echo()
@@ -65,21 +66,25 @@ def run_puzzle(screen):
         flag = False
         while flag == False:
             gRow = get_input(screen, 18, 2, "Enter the row: ")
-            if gRow in '12345678910':
+            if gRow.isdigit() and 1 <= int(gRow) <= 10:
                 flag = True
             else:
                 msg = "Invalid input, enter an integer."
                 type_text(screen, 21, 2, msg, delay=0.01)
                 time.sleep(1.5)
+                screen.move(21, 0)
+                screen.clrtoeol()
         flag = False
         while flag == False:
             gCol = get_input(screen, 19, 2, "Enter the column: ")
-            if gCol in '12345678910':
+            if gCol.isdigit() and 1 <= int(gCol) <= 10:
                 flag = True
             else:
                 msg = "Invalid input, enter an integer."
                 type_text(screen, 21, 2, msg, delay=0.01)
                 time.sleep(1.5)
+                screen.move(21, 0)
+                screen.clrtoeol()
         if gRow == str(row + 1) and gCol == str(col + 1):
             result = True
             msg = (
@@ -94,3 +99,6 @@ def run_puzzle(screen):
             time.sleep(1.5)
 
     return result
+
+if __name__ == "__main__":
+    curses.wrapper(run_puzzle)

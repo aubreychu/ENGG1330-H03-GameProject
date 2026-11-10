@@ -50,6 +50,7 @@ Comntribution Record:
   - Tseng Wei Hua:
     - Writing up 5 puzzles
     - Game system design
+    - Bugs fix
 
 Sources:
   - Curses:
