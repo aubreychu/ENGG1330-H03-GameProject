@@ -63,7 +63,7 @@ def run_puzzle(screen):
         screen.refresh()
         #Input/Input validation
         flag = False
-        while flag = False:
+        while flag == False:
             gRow = get_input(screen, 18, 2, "Enter the row: ")
             if gRow in '12345678910':
                 flag = True
@@ -72,7 +72,7 @@ def run_puzzle(screen):
                 type_text(screen, 21, 2, msg, delay=0.01)
                 time.sleep(1.5)
         flag = False
-        while flag = False:
+        while flag == False:
             gCol = get_input(screen, 19, 2, "Enter the column: ")
             if gCol in '12345678910':
                 flag = True

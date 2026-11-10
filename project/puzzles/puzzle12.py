@@ -60,7 +60,7 @@ def run_puzzle(screen):
         screen.refresh()
         flag = False
         #Input/Input validation
-        while flag = False:
+        while flag == False:
             guess = get_input(screen, 11, 2, "Enter the sequence: ")
             flag = True
             for item in guess:
@@ -68,7 +68,7 @@ def run_puzzle(screen):
                     item = item
                 else: 
                     flag = False
-            if flag = False:
+            if flag == False:
                 msg = "Please input a valid number sequence"
                 type_text(screen, 13, 2, msg, delay=0.01)
                 time.sleep(1.5)

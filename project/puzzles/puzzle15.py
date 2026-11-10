@@ -77,7 +77,7 @@ def run_puzzle(screen):
             screen.refresh()
             #Input/Input validation
             flag = False
-            while flag = False:
+            while flag == False:
                 answer = get_input(
                     screen, 15, 2,
                     "Enter 'r' for right and 'l' for left: "
