@@ -49,3 +49,15 @@ What was kept, changed, or rejected, and how results were checked (tests or corr
 - Changed: Incorrect payout calculations, invalid betting inputs.
 - Rejected: N/A
 - Verification: Double-checked the modifying parts and exectuted the program using different betting amounts, thresholds, and dice outcomes.
+
+## Entry
+Member, date: Ryan, 10 Nov 2026
+Tool and model (where available) ChatGPT GPT-6
+Purpose: Invalid inputs can overlap on the screen in puzzle12.py
+Prompt used: "Fix the problem when invalid inputs will overlap on the screen"
+Substantial parts affected (files/materials): puzzlep12.py
+What was kept, changed, or rejected, and how results were checked (tests or corrections)
+- Kept: Everything.
+- Changed: Added several lines in the function get_input().
+- Rejected: N/A
+- Verification: Run the program with invalid inputs and valid inputs, problem doesn't exist anymore.

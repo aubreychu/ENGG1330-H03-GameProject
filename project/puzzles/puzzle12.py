@@ -20,7 +20,9 @@ def type_text(screen, row, col, text, delay=0.01):
 
 
 def get_input(screen, row, col, prompt):
-    """Prompts the user for a text string inside curses."""
+    screen.move(row, 0)
+    screen.clrtoeol()
+
     screen.addstr(row, col, prompt)
     screen.refresh()
     curses.echo()
@@ -47,12 +49,12 @@ def run_puzzle(screen):
             screen.move(r, 0)
             screen.clrtoeol()
 
-        nums = random.sample(range(0, 10), 8)
+        nums = random.choices(range(10), k=8)
         code = "".join(str(num) for num in nums)
 
         screen.addstr(9, 2, "The code is: " + str(code))
         screen.refresh()
-        time.sleep(3)
+        time.sleep(2.5)
 
         # Clear the code from screen
         screen.move(9, 0)
@@ -63,15 +65,15 @@ def run_puzzle(screen):
         while flag == False:
             guess = get_input(screen, 11, 2, "Enter the sequence: ")
             flag = True
-            for item in guess:
-                if item in '12345678910':
-                    item = item
-                else: 
-                    flag = False
-            if flag == False:
-                msg = "Please input a valid number sequence"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.5)
+            if len(guess) == 8 and guess.isdigit():
+                break
+
+            msg = "Please enter exactly 8 digits (0-9)!"
+            type_text(screen, 13, 2, msg, delay=0.01)
+            time.sleep(1.5)
+
+            screen.move(13, 0)
+            screen.clrtoeol()
         if guess == str(code):
             result = True
             msg = (
@@ -89,3 +91,6 @@ def run_puzzle(screen):
             time.sleep(1.5)
 
     return result
+
+if __name__ == "__main__":
+    curses.wrapper(run_puzzle)

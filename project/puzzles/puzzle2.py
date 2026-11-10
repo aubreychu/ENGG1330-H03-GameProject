@@ -89,8 +89,8 @@ def run_puzzle(screen):
         under_chance = threshold
         over_chance = 100 - threshold
 
-        under_multiplier = 99 / under_chance
-        over_multiplier = 99 / over_chance
+        under_multiplier = 1.5 * (99 / under_chance)
+        over_multiplier = 1.5 * (99 / over_chance)
 
         under_profit = bet * (under_multiplier - 1)
         over_profit = bet * (over_multiplier - 1)

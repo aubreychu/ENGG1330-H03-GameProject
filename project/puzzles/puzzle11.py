@@ -63,73 +63,75 @@ def run_puzzle(screen):
         for r in range(9, 16):
             screen.move(r, 0)
             screen.clrtoeol()
-
+        
         key = random.randint(1, 5)
         #Input/Input validation
         flag = False
         while flag == False:
             guess = get_input(screen, 11, 2, "Enter your guess: ")
-            if isinstance(guess, str):
+            if guess.isdigit():
                 flag = True
             else:
                 msg = "Please enter valid input type"
                 type_text(screen, 13, 2, msg, delay=0.01)
                 time.sleep(1.5)
         if key == 1:
-            screen.addstr(9, 2, "Hint: " + hint1)
             if guess == pas1:
-                result = True
                 msg = "Correct! The door opens! Good luck on the rest of your escape!"
                 type_text(screen, 13, 2, msg, delay=0.01)
                 time.sleep(1.5)
+                return True
             else:
+                screen.addstr(9, 2, "Hint: " + hint1)
                 msg = "The door still doesn't budge! Try again!"
                 type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.2)
+                time.sleep(2)
         elif key == 2:
-            screen.addstr(9, 2, "Hint: " + hint2)
             if guess == pas2:
-                result = True
                 msg = "Correct! The door opens! Good luck on the rest of your escape!"
                 type_text(screen, 13, 2, msg, delay=0.01)
                 time.sleep(1.5)
+                return True
             else:
+                screen.addstr(9, 2, "Hint: " + hint2)
                 msg = "The door still doesn't budge! Try again!"
                 type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.2)
+                time.sleep(2)
         elif key == 3:
-            screen.addstr(9, 2, "Hint: " + hint3)
             if guess == pas3:
-                result = True
                 msg = "Correct! The door opens! Good luck on the rest of your escape!"
                 type_text(screen, 13, 2, msg, delay=0.01)
                 time.sleep(1.5)
+                return True
             else:
+                screen.addstr(9, 2, "Hint: " + hint3)
                 msg = "The door still doesn't budge! Try again!"
                 type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.2)
+                time.sleep(2)
         elif key == 4:
-            screen.addstr(9, 2, "Hint: " + hint4)
             if guess == pas4:
-                result = True
                 msg = "Correct! The door opens! Good luck on the rest of your escape!"
                 type_text(screen, 13, 2, msg, delay=0.01)
                 time.sleep(1.5)
+                return True
             else:
+                screen.addstr(9, 2, "Hint: " + hint4)
                 msg = "The door still doesn't budge! Try again!"
                 type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.2)
+                time.sleep(2)
         elif key == 5:
-            screen.addstr(9, 2, "Hint: This number has no magnuitude, yet it take up")
-            screen.addstr(10, 8, "just as much space as the word 'hello'")
             if guess == pas5:
-                result = True
                 msg = "Correct! The door opens! Good luck on the rest of your escape!"
                 type_text(screen, 13, 2, msg, delay=0.01)
                 time.sleep(1.5)
+                return True
             else:
+                screen.addstr(9, 2, "Hint: This number has no magnuitude, yet it take up")
+                screen.addstr(10, 8, "just as much space as the word 'hello'")
                 msg = "The door still doesn't budge! Try again!"
                 type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.2)
-
+                time.sleep(2)
     return result
+
+if __name__ == "__main__":
+    curses.wrapper(run_puzzle)

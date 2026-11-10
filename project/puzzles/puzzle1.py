@@ -33,15 +33,15 @@ def type_text(screen, row, col, text, delay=0.02):
 
 def run_puzzle(screen):
     curses.curs_set(0)
-    target = random.randint(300, 600)
+    target = random.randint(250, 500)
 
     screen.addstr(4, 2, "=== MINES GAMBLING PUZZLE ===")
-    type_text(screen, 5, 2, "You need money to escape from this place! Or else you couldn't even pay for a cup of coffee!")
+    type_text(screen, 5, 2, "You need money to escape from this place!\n Or else you couldn't even pay for a cup of coffee!")
     type_text(screen, 6, 2, f"Your target is to get at least ${target}! Each round starts with $100.")
     type_text(screen, 7, 2, "Find safe tiles to multiply your money. Hit a mine and lose it all!")
     screen.refresh()
 
-    mine_count = 3
+    mine_count = 2
 
     while True:
         money = 100
