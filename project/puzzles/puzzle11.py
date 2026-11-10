@@ -67,7 +67,7 @@ def run_puzzle(screen):
         key = random.randint(1, 5)
         #Input/Input validation
         flag = False
-        while flag = False:
+        while flag == False:
             guess = get_input(screen, 11, 2, "Enter your guess: ")
             if isinstance(guess, str):
                 flag = True
