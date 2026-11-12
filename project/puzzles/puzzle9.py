@@ -63,7 +63,7 @@ def run_puzzle(screen):
         expected = rule(seq[-1])
         if int(answer) == expected:
             correct += 1
-            screen.addstr(14, 2, f"Correct! ({correct}/7)")
+            screen.addstr(14, 2, f"Correct! ({correct}/4)")
         else:
             screen.addstr(14, 2, f"Wrong! The answer was {expected}  ({correct}/7)")
 
