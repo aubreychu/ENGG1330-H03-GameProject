@@ -22,7 +22,7 @@ def run_puzzle(screen):
 
     screen.addstr(4, 2, "Pattern Guess")
     screen.addstr(5, 2, "I'll show you a sequence. Guess the next number!")
-    screen.addstr(6, 2, "First to get 7 correct wins")
+    screen.addstr(6, 2, "First to get 4 correct wins")
     screen.refresh()
 
     rules = [
@@ -38,7 +38,7 @@ def run_puzzle(screen):
 
     correct = 0
 
-    while correct < 7:
+    while correct < 4:
         for r in range(8, 23):
             screen.move(r, 0)
             screen.clrtoeol()
@@ -70,7 +70,7 @@ def run_puzzle(screen):
         screen.refresh()
         time.sleep(1.1)
 
-    screen.addstr(17, 2, "You got 7 correct! You win!")
+    screen.addstr(17, 2, "You got 4 correct! You win!")
     screen.refresh()
     time.sleep(1.5)
     return True
