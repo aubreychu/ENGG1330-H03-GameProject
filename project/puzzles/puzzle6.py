@@ -21,10 +21,10 @@ def run_puzzle(screen):
     curses.curs_set(0)
 
     # Game rules formatted strictly within 75 columns (Rows 4 to 8)
-    screen.addstr(4, 2, "1. The computer generates a 4-digit number (with repeated digits).")
-    screen.addstr(5, 2, "2. The player has 10 attempts to guess the number.")
+    screen.addstr(4, 2, "1. Oceanus appears! He needs you to provide the correct 4-digit number.")
+    screen.addstr(5, 2, "2. You have 10 attempts to guess the number.")
     screen.addstr(6, 2, "3. A = right digit & position; B = right digit, wrong position.")
-    screen.addstr(7, 2, "4. Win by guessing all four digits correctly (4A0B).")
+    screen.addstr(7, 2, "4. Win by guessing all four digits correctly.")
     screen.addstr(8, 2, "5. If all attempts are used, the game ends and the answer is shown.")
     screen.refresh()
 

@@ -3,22 +3,11 @@ import random
 import time
 
 from title_screen import run_title_screen
+from timed_screen import TimedScreen, RoomTimeExpired
 from puzzles import (
-    puzzle1,
-    puzzle2,
-    puzzle3,
-    puzzle4,
-    puzzle5,
-    puzzle6,
-    puzzle7,
-    puzzle8,
-    puzzle9,
-    puzzle10,
-    puzzle11,
-    puzzle12,
-    puzzle13,
-    puzzle14,
-    puzzle15,
+    puzzle1, puzzle2, puzzle3, puzzle4, puzzle5,
+    puzzle6, puzzle7, puzzle8, puzzle9, puzzle10,
+    puzzle11, puzzle12, puzzle13, puzzle14, puzzle15,
 )
 
 BASE_ROOM_TIME = 60
@@ -42,112 +31,209 @@ CATALOG = [
 ]
 
 
-def generate_rooms(catalog, num_rooms=6):
-    return random.sample(catalog, k=num_rooms)
+def show_help_screen(scr):
+    # TODO: make this look less ugly later if time permits
+    scr.timeout(-1)
+    scr.erase()
+    scr.addstr(2, 2, "=== TITANIC ESCAPE | HOW TO PLAY ===")
+    scr.addstr(3, 2, "-" * 70)
+    scr.addstr(5, 2, "The RMS Titanic has struck an iceberg and is rapidly taking on water!")
+    scr.addstr(7, 2, "OBJECTIVE:")
+    scr.addstr(8, 4, "- Ascend through 6 randomized compartments to reach the Boat Deck.")
+    scr.addstr(9, 4, "- Solve the puzzle in each room to unlock the way forward.")
+    scr.addstr(11, 2, "CONTROLS:")
+    scr.addstr(12, 4, "- Follow the on-screen prompts in each room.")
+    scr.addstr(13, 4, "- Type your answer and press [ENTER] to submit.")
+    scr.addstr(15, 2, "WIN / LOSS:")
+    scr.addstr(16, 4, "- Clear all 6 rooms to board a lifeboat and survive!")
+    scr.addstr(17, 4, "- Failing a room or running out of time ends the game.")
+    scr.addstr(19, 2, "- Remaining time is carried over to the next room.")
+    scr.addstr(21, 2, "Press any key to return to the Title Screen...")
+    scr.refresh()
+    scr.get_wch()
 
 
-def show_help_screen(screen):
-    """Displays the How to Play instructions within the 80x24 terminal."""
+def show_scene(screen, title, message, cleared, total=6, stats=None):
     screen.timeout(-1)
     screen.erase()
-    screen.addstr(2, 2, "=== TITANIC ESCAPE | HOW TO PLAY ===")
-    screen.addstr(3, 2, "-" * 70)
-    screen.addstr(5, 2, "The RMS Titanic has struck an iceberg and is rapidly taking on water!")
-    screen.addstr(7, 2, "OBJECTIVE:")
-    screen.addstr(8, 4, "- Ascend through 6 randomized compartments to reach the Boat Deck.")
-    screen.addstr(9, 4, "- Solve the puzzle in each room to unlock the way forward.")
-    screen.addstr(11, 2, "CONTROLS:")
-    screen.addstr(12, 4, "- Follow the on-screen prompts in each room.")
-    screen.addstr(13, 4, "- Type your answer and press [ENTER] to submit.")
-    screen.addstr(15, 2, "WIN / LOSS:")
-    screen.addstr(16, 4, "- Clear all 6 rooms to board a lifeboat and survive!")
-    screen.addstr(17, 4, "- Failing a room will cause the ship to sink (Game Over).")
-    screen.addstr(20, 2, "Press any key to return to the Title Screen...")
+
+    h, w = screen.getmaxyx()
+
+    def draw(row, text, style=0):
+        if row >= h or row < 0:
+            return
+        text = str(text)[:max(0, w - 2)]
+        col = max(0, (w - len(text)) // 2)
+        try:
+            screen.addstr(row, col, text, style)
+        except curses.error:
+            pass
+
+    draw(3, "=" * 54)
+    draw(5, "T I T A N I C   E S C A P E", curses.A_BOLD)
+    draw(7, title, curses.A_BOLD)
+    draw(9, message)
+
+    draw(12, "ESCAPE PROGRESS")
+    progress = " ".join(
+        "[#]" if i < cleared else "[ ]"
+        for i in range(total)
+    )
+    draw(14, progress, curses.A_BOLD)
+    draw(15, f"{cleared} / {total} COMPARTMENTS CLEARED")
+
+    if stats:
+        draw(18, stats)
+
+    draw(20, "=" * 54)
+    draw(22, "Press any key to continue...")
+
+    curses.noecho()
+    screen.timeout(-1)
     screen.refresh()
-    screen.get_wch()
+
+    curses.flushinp()
+    screen.getch()
+
+
+def generate_rooms(catalog, num_rooms=6):
+    chill = next((r for r in catalog if r["name"] == "Chill Session"), None)
+    if chill is None or num_rooms <= 3:
+        pool = [r for r in catalog if r is not chill]
+        return random.sample(pool, k=num_rooms)
+    chosen = random.sample(catalog, k=num_rooms)
+    if chill in chosen:
+        chosen.remove(chill)
+        chosen.insert(random.randrange(3, num_rooms), chill)
+    return chosen
+
+
+def show_game_over(screen, timed_out, allowedTime=0, elapsed=0,
+                   cleared=0, total=6):
+    if timed_out:
+        show_scene(
+            screen,
+            title="TIME EXPIRED!",
+            message="The compartment flooded. The Titanic sinks...",
+            cleared=cleared,
+            total=total,
+            stats=f"Time limit: {int(allowedTime)}s"
+        )
+    else:
+        show_scene(
+            screen,
+            title="GAME OVER!",
+            message="You failed the puzzle. The ship is sinking!",
+            cleared=cleared,
+            total=total,
+            stats=f"{cleared} compartments cleared."
+        )
 
 
 def play_game(screen):
     curses.curs_set(0)
-
-    # Title screen menu loop
     while True:
         choice = run_title_screen(screen)
-        # Restore blocking input mode after title screen's 100ms animation timeout
         screen.timeout(-1)
-
         if choice == "q":
             return False
-        elif choice == "h":
+        if choice == "h":
             show_help_screen(screen)
         elif choice == "c":
             break
 
     run = generate_rooms(CATALOG, num_rooms=6)
-    carried_over_time = 0.0
-    
-    for n, room in enumerate(run, start=1):
+    extraTime = 0.0
+
+    for idx, room in enumerate(run, start=1):
         screen.erase()
-        allowed_time = BASE_ROOM_TIME + carried_over_time
-        # Draw a fixed header at Row 0 to Row 2
-        screen.addstr(0, 2, f"=== TITANIC ESCAPE | Room {n} of {len(run)} ===")
+        allowedTime = BASE_ROOM_TIME + extraTime
+        screen.addstr(0, 2, f"=== TITANIC ESCAPE | Room {idx} of {len(run)} ===")
         screen.addstr(1, 2, f"Location: {room['name']}")
         screen.addstr(2, 2, "-" * 70)
         screen.refresh()
 
-        # Call the puzzle
-        start_time = time.time()
-        passed = room["run"](screen)
-        elapsed = time.time() - start_time
-        screen.timeout(-1)
+        if room["name"] == "Chill Session":
+            try:
+                passed = room["run"](screen)
+            finally:
+                screen.timeout(-1)
+                curses.noecho()
 
-        # Loss Condition 1: Exceeded the room's time limit
-        if elapsed > allowed_time:
-            screen.erase()
-            screen.addstr(9, 20, "========================================")
-            screen.addstr(10, 20, "  TIME EXPIRED! The deck has flooded!   ")
-            screen.addstr(11, 20, "========================================")
-            screen.addstr(13, 20, f"Allowed: {int(allowed_time)}s | Time Taken: {int(elapsed)}s")
-            screen.addstr(14, 20, "The ship sinks and you go down with it...")
-            screen.addstr(17, 20, "Press any key to exit...")
-            screen.refresh()
-            screen.get_wch()
-            return False
-        # Loss Condition 2: Puzzle failure
-        if not passed:
-            screen.erase()
-            screen.addstr(10, 25, "GAME OVER! You failed the puzzle.")
-            screen.addstr(12, 25, "Press any key to exit...")
-            screen.refresh()
-            screen.get_wch()
-            return False
-        surplus = allowed_time - elapsed
-        carried_over_time = surplus
+            elapsed = 0.0
+
+        else:
+            timed_screen = TimedScreen(
+                screen,
+                allowedTime,
+                room_name=room["name"],
+                room_number=idx,
+                total_rooms=len(run)
+            )
+
+            started = time.monotonic()
+
+            try:
+                passed = room["run"](timed_screen)
+                timed_screen.check_deadline()
+
+            except RoomTimeExpired:
+                elapsed = time.monotonic() - started
+
+                show_game_over(
+                    screen,
+                    timed_out=True,
+                    allowedTime=allowedTime,
+                    elapsed=elapsed,
+                    cleared=idx - 1,
+                    total=len(run)
+                )
+                return False
+
+            finally:
+                screen.timeout(-1)
+                curses.noecho()
+
+            elapsed = time.monotonic() - started
         
-        if n < len(run):
-            screen.erase()
-            screen.addstr(9, 20, "========================================")
-            screen.addstr(10, 20, f"  COMPARTMENT {n} CLEARED! ({int(elapsed)}s spent)  ")
-            screen.addstr(11, 20, "========================================")
-            screen.addstr(13, 20, f"+{int(surplus)}s bonus carried to the next deck!")
-            screen.addstr(15, 20, "Ascending to the next level...")
-            screen.addstr(17, 20, "Press any key to continue...")
-            screen.refresh()
-            screen.get_wch()
+        if not passed:
+            show_game_over(
+                screen,
+                timed_out=False,
+                cleared=idx - 1,
+                total=len(run)
+            )
+            return False
+            
+        surplus = max(0.0, allowedTime - elapsed)
+        extraTime = surplus
 
-    # Victory screen
-    screen.erase()
-    screen.addstr(9, 18, "********************************************")
-    screen.addstr(10, 18, "  VICTORY! You reached the Boat Deck!       ")
-    screen.addstr(11, 18, "********************************************")
-    screen.addstr(13, 18, f"You successfully launched a lifeboat!")
-    screen.addstr(14, 18, f"Remaining time banked: {int(carried_over_time)} seconds.")
-    screen.addstr(17, 18, "Press any key to exit...")
-    screen.refresh()
-    screen.get_wch()
+        if idx < len(run):
+            if idx < len(run):
+                show_scene(
+                    screen,
+                    title=f"COMPARTMENT {idx} CLEARED!",
+                    message="You are one step closer to the Boat Deck!",
+                    cleared=idx,
+                    total=len(run),
+                    stats=(
+                        f"Time spent: {int(elapsed)}s | "
+                        f"BONUS TIME EARNED: +{int(surplus)}s | "
+                        f"Next room: {int(BASE_ROOM_TIME + extraTime)}s"
+        )
+    )
+
+    show_scene(
+        screen,
+        title="YOU SURVIVED!",
+        message="You reached the Boat Deck and escaped on a lifeboat!",
+        cleared=len(run),
+        total=len(run),
+        stats=f"Remaining time: {int(extraTime)}s"
+    )
+
     return True
 
 
 if __name__ == "__main__":
     curses.wrapper(play_game)
-

@@ -36,9 +36,9 @@ def run_puzzle(screen):
     target = random.randint(250, 500)
 
     screen.addstr(4, 2, "=== MINES GAMBLING PUZZLE ===")
-    type_text(screen, 5, 2, "You need money to escape from this place!\n Or else you couldn't even pay for a cup of coffee!")
-    type_text(screen, 6, 2, f"Your target is to get at least ${target}! Each round starts with $100.")
-    type_text(screen, 7, 2, "Find safe tiles to multiply your money. Hit a mine and lose it all!")
+    type_text(screen, 5, 2, "You need money to escape from this place!\nOr else you couldn't even pay for a cup of coffee!")
+    type_text(screen, 7, 2, f"Your target is to get at least ${target}! Each round starts with $100.")
+    type_text(screen, 8, 2, "Find safe tiles to multiply your money. Hit a mine and lose it all!")
     screen.refresh()
 
     mine_count = 2
@@ -54,7 +54,7 @@ def run_puzzle(screen):
                 screen.move(r, 0)
                 screen.clrtoeol()
 
-            screen.addstr(8, 2, f"--- MINES BOARD | Money: ${money:.2f} | Target: ${target} ---")
+            screen.addstr(9, 2, f"--- MINES BOARD | Money: ${money:.2f} | Target: ${target} ---")
 
             # Draw 5x5 Mines Board
             for row_idx in range(5):

@@ -37,6 +37,12 @@ def run_puzzle(screen):
         screen.addstr(9, 2, f"Current Score -> You {player} : {computer} Computer")
         player_input = get_input(screen, 11, 2, "big or small: ").lower()
 
+        if player_input not in ("big", "small"):
+            screen.addstr(13, 2, "Please type 'big' or 'small'")
+            screen.refresh()
+            time.sleep(1.0)
+            continue
+
         d1 = random.randint(1, 6)
         d2 = random.randint(1, 6)
         total = d1 + d2

@@ -68,25 +68,28 @@ def run_puzzle(screen):
         screen.refresh()
         time.sleep(0.7)
 
-        bomb = random.randrange(1, 100)
+        
+        bomb = random.randint(1, 100)
+
         if bomb <= 20:
             loss = random.randint(5, 15)
+            actual_loss = min(gold, loss)
             gold = max(0, gold - loss)
-            type_text(screen, 17, 2, "Oh no! The chest was trapped! You lost some gold!")
-            type_text(screen, 18, 2, f"-{loss} gold coins!")
+
+            type_text(screen, 17, 2, "Oh no! The chest was trapped!")
+            type_text(screen, 18, 2, f"-{actual_loss} gold coins!")
+
         else:
             if reward >= 25:
-                type_text(screen, 
-                          17, 2, "JACKPOT! A huge treasure!")
+                type_text(screen, 17, 2, "JACKPOT! A huge treasure!")
             elif reward >= 15:
                 type_text(screen, 17, 2, "Nice! You found shiny gold!")
             else:
                 type_text(screen, 17, 2, "You found some gold coins!")
-
-        gold += reward
-        type_text(screen, 19, 2, f"+{reward} gold coins!")
-        screen.refresh()
-        time.sleep(1.2)
+            gold += reward
+            type_text(screen, 19, 2, f"+{reward} gold coins!")
+            
+        time.sleep(1.5)
 
     type_text(screen, 21, 2, f"CONGRATULATIONS! You collected {gold} gold coins! PUZZLE COMPLETED!")
     screen.refresh()

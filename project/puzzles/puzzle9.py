@@ -21,8 +21,9 @@ def run_puzzle(screen):
     curses.curs_set(0)
 
     screen.addstr(4, 2, "Pattern Guess")
-    screen.addstr(5, 2, "I'll show you a sequence. Guess the next number!")
-    screen.addstr(6, 2, "First to get 4 correct wins")
+    screen.addstr(5, 2, "The ocean come with a pattern.")
+    screen.addstr(6, 2, "You need to guess the next number in the pattern.")
+    screen.addstr(7, 2, "First to get 4 correct wins")
     screen.refresh()
 
     rules = [
@@ -50,7 +51,7 @@ def run_puzzle(screen):
         for i in range(3):
             seq.append(rule(seq[-1]))
 
-        screen.addstr(8, 2, f"Progress: {correct}/4 correct")
+        screen.addstr(9, 2, f"Progress: {correct}/4 correct")
         screen.addstr(10, 2, f"Sequence: {seq[0]}, {seq[1]}, {seq[2]}, {seq[3]}, ?")
         answer = get_input(screen, 12, 2, "Next number: ")
 

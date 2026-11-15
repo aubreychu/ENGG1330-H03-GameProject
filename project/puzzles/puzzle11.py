@@ -66,7 +66,7 @@ def run_puzzle(screen):
             screen.clrtoeol()
 
         # Generate a password for this round
-        key = random.randint(0, 4)
+        key = random.randint(0, 5)
         password, hint = passwords[key]
 
         # Display hint BEFORE guessing

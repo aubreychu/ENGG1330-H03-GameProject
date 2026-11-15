@@ -21,12 +21,12 @@ def run_puzzle(screen):
     curses.curs_set(0)
 
     # Game rules (Rows 4 to 11, all under 75 columns)
-    screen.addstr(4, 2, "Welcome to NUMBER BOMB!")
-    screen.addstr(5, 2, "A secret bomb number is hidden in a range (0-100).")
-    screen.addstr(6, 2, "Guess the secret number. After each guess:")
+    screen.addstr(4, 2, "The God is challenging you!")
+    screen.addstr(5, 2, "A secret bomb  is hidden in a room of this ship, corresponding to a number from 0-100.")
+    screen.addstr(6, 2, "Guess the number. After each guess:")
     screen.addstr(7, 4, "- Too low  -> everything up to your guess is eliminated")
     screen.addstr(8, 4, "- Too high -> everything from your guess upward is eliminated")
-    screen.addstr(9, 2, "Guess the hidden number within 10 tries to win. Good luck!")
+    screen.addstr(9, 2, "You only have 10 attempts!")
     screen.refresh()
 
     x = random.randint(0, 100)
@@ -58,7 +58,7 @@ def run_puzzle(screen):
             times -= 1
             time.sleep(1.0)
         else:
-            screen.addstr(16, 2, "Congradulation! You get it right")
+            screen.addstr(16, 2, "Congradulation! You get it right! Go solve the bomb now!")
             screen.refresh()
             time.sleep(1.5)
             return True
