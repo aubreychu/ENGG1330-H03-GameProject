@@ -50,7 +50,7 @@ def run_puzzle(screen):
         for i in range(3):
             seq.append(rule(seq[-1]))
 
-        screen.addstr(8, 2, f"Progress: {correct}/7 correct")
+        screen.addstr(8, 2, f"Progress: {correct}/4 correct")
         screen.addstr(10, 2, f"Sequence: {seq[0]}, {seq[1]}, {seq[2]}, {seq[3]}, ?")
         answer = get_input(screen, 12, 2, "Next number: ")
 
