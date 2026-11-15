@@ -1,13 +1,13 @@
-# Puzzle will involve trying to open a locked door where the password changes
+
 import curses
 import random
 import time
 
 
 def type_text(screen, row, col, text, delay=0.01):
-    """Draws text with a fast typewriter effect at a given coordinate."""
-    r = row
-    c = col
+    """Draw text with a typewriter effect."""
+    r, c = row, col
+
     for char in text:
         if char == "\n":
             r += 1
@@ -20,20 +20,25 @@ def type_text(screen, row, col, text, delay=0.01):
 
 
 def get_input(screen, row, col, prompt):
-    """Prompts the user for a text string inside curses."""
+    """Get user input and clear the input line."""
+    screen.move(row, 0)
+    screen.clrtoeol()
     screen.addstr(row, col, prompt)
     screen.refresh()
+
     curses.echo()
     curses.curs_set(1)
+
     raw = screen.getstr(row, col + len(prompt), 25)
+
     curses.noecho()
     curses.curs_set(0)
+
     return raw.decode("utf-8", errors="ignore").strip()
 
 
 def run_puzzle(screen):
-    key = random.randint(1, 5)
-    result = False
+    curses.curs_set(0)
 
     message = (
         "You've arrived at a dead end! The only way out is the locked door.\n"
@@ -42,96 +47,65 @@ def run_puzzle(screen):
         "*Some hints refer to length and content, others do not."
     )
 
-    # Type out intro story within Rows 4 to 7
-    type_text(screen, 4, 2, message, delay=0.01)
+    type_text(screen, 4, 2, message)
 
-    # A series of passwords with corresponding hints
-    pas1 = "011235"
-    hint1 = "The past dictates the future. Who's scared of 7?"
-    pas2 = "321"
-    hint2 = "Go!"
-    pas3 = "1000"
-    hint3 = "8 in binary"
-    pas4 = "123456"
-    hint4 = "As simple as it gets. And as deep as you go when it ends"
-    pas5 = "00000"
-    hint5 = "This number has no magnuitude, yet it take up just as much space as the word 'hello'"
+    # Password and hint pairs
+    passwords = [
+        ("011235", "The past dictates the future. Who's scared of 7?"),
+        ("321", "Go!"),
+        ("1000", "8 in binary"),
+        ("123456", "As simple as it gets. And as deep as you go when it ends"),
+        ("00000", "No magnitude, but the length of 'hello'.")
+        ("777", "The number of luck, and you'll need it to win lot!"),
+    ]
 
-    # Loop that runs until the user has correctly guessed the password
-    while result == False:
-        # Clear interaction area (Rows 9 to 15) for the new attempt
+    while True:
+        # Clear interaction area
         for r in range(9, 16):
             screen.move(r, 0)
             screen.clrtoeol()
-        
-        key = random.randint(1, 5)
-        #Input/Input validation
-        flag = False
-        while flag == False:
+
+        # Generate a password for this round
+        key = random.randint(0, 4)
+        password, hint = passwords[key]
+
+        # Display hint BEFORE guessing
+        screen.addstr(9, 2, "Hint: " + hint)
+        screen.refresh()
+
+        # Input validation
+        while True:
             guess = get_input(screen, 11, 2, "Enter your guess: ")
+
+            # Clear previous error message
+            screen.move(13, 0)
+            screen.clrtoeol()
+
             if guess.isdigit():
-                flag = True
-            else:
-                msg = "Please enter valid input type"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.5)
-        if key == 1:
-            if guess == pas1:
-                msg = "Correct! The door opens! Good luck on the rest of your escape!"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.5)
-                return True
-            else:
-                screen.addstr(9, 2, "Hint: " + hint1)
-                msg = "The door still doesn't budge! Try again!"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(2)
-        elif key == 2:
-            if guess == pas2:
-                msg = "Correct! The door opens! Good luck on the rest of your escape!"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.5)
-                return True
-            else:
-                screen.addstr(9, 2, "Hint: " + hint2)
-                msg = "The door still doesn't budge! Try again!"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(2)
-        elif key == 3:
-            if guess == pas3:
-                msg = "Correct! The door opens! Good luck on the rest of your escape!"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.5)
-                return True
-            else:
-                screen.addstr(9, 2, "Hint: " + hint3)
-                msg = "The door still doesn't budge! Try again!"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(2)
-        elif key == 4:
-            if guess == pas4:
-                msg = "Correct! The door opens! Good luck on the rest of your escape!"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.5)
-                return True
-            else:
-                screen.addstr(9, 2, "Hint: " + hint4)
-                msg = "The door still doesn't budge! Try again!"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(2)
-        elif key == 5:
-            if guess == pas5:
-                msg = "Correct! The door opens! Good luck on the rest of your escape!"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(1.5)
-                return True
-            else:
-                screen.addstr(9, 2, "Hint: This number has no magnuitude, yet it take up")
-                screen.addstr(10, 8, "just as much space as the word 'hello'")
-                msg = "The door still doesn't budge! Try again!"
-                type_text(screen, 13, 2, msg, delay=0.01)
-                time.sleep(2)
-    return result
+                break
+
+            type_text(
+                screen, 13, 2,
+                "Please enter valid numeric input!"
+            )
+            time.sleep(1.5)
+
+        # Check password
+        if guess == password:
+            type_text(
+                screen, 13, 2,
+                "Correct! The door opens! Good luck on the rest of your escape!"
+            )
+            time.sleep(1.5)
+            return True
+
+        else:
+            type_text(
+                screen, 13, 2,
+                "Wrong password! The password is resetting..."
+            )
+            time.sleep(2)
+
 
 if __name__ == "__main__":
     curses.wrapper(run_puzzle)
