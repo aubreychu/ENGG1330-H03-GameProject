@@ -55,8 +55,8 @@ def run_puzzle(screen):
         ("321", "Go!"),
         ("1000", "8 in binary"),
         ("123456", "As simple as it gets. And as deep as you go when it ends"),
-        ("00000", "No magnitude, but the length of 'hello'.")
-        ("777", "The number of luck, and you'll need it to win lot!"),
+        ("00000", "No magnitude, but the length of 'hello'."),
+        ("777", "The number of luck, and you'll need it to win lot!")
     ]
 
     while True:
