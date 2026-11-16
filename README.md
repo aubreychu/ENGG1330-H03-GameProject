@@ -40,17 +40,20 @@ Test and Limitations:
 
 Comntribution Record:
   - Erwann Hare Zylberberg:
+    - Conceptual brain storm 
     - Documentation
     - Writing up 5 puzzles
   - Lee Min-En:
     - Writing up 5 puzzles
+    - Demo
   - Chu Viet Tung:
-    - Wrote the main framework to connect all the puzzles together and global game stated
+    - Wrote the main framework to connect all the puzzles together and global game state
     - Created the title screen with animations using the curses library
+    - Timer system implemenation
   - Tseng Wei Hua:
     - Writing up 5 puzzles
-    - Game system design
-    - Bugs fix
+    - Debugging
+    - Trailer
 
 Sources:
   - Curses:
