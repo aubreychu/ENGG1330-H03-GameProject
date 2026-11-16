@@ -67,7 +67,20 @@ Sources:
     - Liscence: N/A
     - Usage: Implemented in the main function of puzzle10 in order to enable intended purpose of the code
   - Type Writer effect:
-    - Component: puzzle11.py, puzzle12.py, puzzle13.py, puzzle14.py, puzzle15.py
+    - Component: puzzle1-15.py
     - Source: Created with inspiration from [Divinemonk](https://github.com/Divinemonk/typewriter_effect_python)
     - Lisence: N/A
     - Usage: Inspired the code used to type out text on screen
+  - Timer:
+    - Component: timed_screen.py, main.py
+     Source: Created with information from [Python.org](https://docs.python.org/3.7/library/time.html)
+    - Lisence: Python Software Foundation License Version 2
+    - Usage: Used the library and the information detailed by the webpage to achieve the timing functions
+  - Ideas for puzzle 1-3:
+    - Component: puzzle1-3.py
+     Source: Created with inspiration from [Stake](https://stake.com/zh)
+    - Lisence: N/A
+    - Usage: Ideas for creating puzzle1-3
+
+Trailer Video Link: https://youtu.be/ycqQRj1OYfo
+Demo Video Link: https://youtu.be/huBnhXWqJQ0
